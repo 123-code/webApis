@@ -1,0 +1,19 @@
+query {
+  persons {
+    id
+    name
+    amount
+    request
+  }
+}
+
+mutation{
+  createPerson(amount:30000,name:"Juan")
+  
+}
+
+mutation{
+  updatePerson(request:"ai sound",amount:20000,name:"josei",id:1)
+}
+
+mutation {DeletePerson(id:1)}
