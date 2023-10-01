@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image'
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import {GET_PEOPLE,CREATE_PERSON,UPDATEUSER,DELETEUSER} from '../graphql/queries';
+import {GET_PEOPLE,CREATE_PERSON,UPDATE_USER,DELETEUSER} from '../graphql/queries';
 
 
  
@@ -45,20 +45,36 @@ export default function Home() {
   }
 
 
-  const TrashbuttonClick = (id)=>{
+  const TrashbuttonClick = (id) => {
     console.log("trash button clicked");
+    
     deleteUser({
       variables: { id }
-    })
+    });
+  };
+  
+  const UpdatebuttonClick = async (user) => {
 
-  }
-
-  const UpdatebuttonClick = (id)=>{
-    console.log("Update button clicked");
-    updateUser({
-      variables: { id }
-    })
-  }
+    setFormData({
+      name: user.name, 
+      amount: user.amount,
+      request: user.request
+    });
+  
+    if (formData.name) {
+      await updateUser({
+        variables: {
+          name: formData.name,
+          amount: formData.amount,
+          request: formData.request
+        } 
+      });
+      
+      // Refetch query to update UI
+      //refetch(); 
+    }
+  
+  };
 
 
 
@@ -66,7 +82,7 @@ export default function Home() {
   const {data,loading, error } = useQuery(GET_PEOPLE);
   const [createUser] = useMutation(CREATE_PERSON);
   const [deleteUser] = useMutation(DELETEUSER);
-  const [updateUser] = useMutation(UPDATEUSER);
+  const [updateUser] = useMutation(UPDATE_USER);
   //createUser().catch(err => console.log(err))
 
   if (loading) return <p>Loading...</p>;
@@ -108,7 +124,7 @@ export default function Home() {
 <button
   type="button" 
   className="bg-orange-500 hover:bg-blue-600 text-white px-2 py-2 rounded ml-3"
-  onClick={() => UpdatebuttonClick(person.id)}
+  onClick={() => UpdatebuttonClick(person.id, person.request, person.amount, person.name)}
 >
   Update User
 </button>

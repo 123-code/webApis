@@ -14,9 +14,14 @@ query {
     createPerson(request: $request, amount: $amount, name: $name) 
   }
 `;
-  export const UPDATEUSER = gql `mutation{
-    updatePerson(request:"ai sound",amount:20000,name:"josei",id:1)
-  }`;
-
-  
-  export const DELETEUSER = gql `mutation {DeletePerson(id:1)}`; 
+export const UPDATE_USER = gql`
+  mutation updatePerson($id: Int!, $request: String!, $amount: Int!, $name: String!) {
+    updatePerson(id: $id, request: $request, amount: $amount, name: $name) 
+  }
+`;
+ 
+export const DELETEUSER = gql`
+  mutation DeletePerson($id: Int!) {
+    DeletePerson(id: $id)
+  }
+`;
