@@ -9,11 +9,9 @@ query {
     }
   }`;
 
-  export const CREATEUSER = 
-  gql`mutation{
-createPerson(amount:30000,name:"Juan")
-  }`;
-
+  export const CREATEUSER = gql`mutation($name: String!, $request: String!, $amount: Int!) {
+    createPerson(amount: $amount, name: $name, request: $request)
+    }`;
   
   export const UPDATEUSER = gql `mutation{
     updatePerson(request:"ai sound",amount:20000,name:"josei",id:1)
