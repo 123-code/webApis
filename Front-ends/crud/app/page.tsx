@@ -1,35 +1,42 @@
 "use client";
 import { useState } from 'react';
 import Image from 'next/image'
+
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import {GET_PEOPLE,CREATEUSER,UPDATEUSER,DELETEUSER} from '../graphql/queries';
+import {GET_PEOPLE,CREATE_PERSON,UPDATEUSER,DELETEUSER} from '../graphql/queries';
 
 
 
 
 export default function Home() {
 
+  const [formData, setFormData] = useState({
+    name: '',
+    request: '',
+    amount: 0 
+  });
+  const handleChange = (e) => {
+    setFormData({
+      ...formData, 
+      [e.target.name]: e.target.value
+    });
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    const formData = new FormData(e.target);
-  
-    const name = formData.get('name');
-    const request = formData.get('request');
-    const amount = formData.get('amount');
-  
+    const name = formData.name;
+    const request = formData.request;
+    const amount = formData.amount;
+    console.log("amount",amount);
     createUser({
-      variables: {
-      name,
-      request,
-      amount
-      }
-      }); 
+      variables: { name, request, amount}
+    })
   }
 
   const {data,loading, error } = useQuery(GET_PEOPLE);
-  const [createUser] = useMutation(CREATEUSER);
- 
+  const [createUser] = useMutation(CREATE_PERSON);
+  //createUser().catch(err => console.log(err))
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>error</p>;
   console.log(error); 
@@ -58,24 +65,31 @@ export default function Home() {
   <input 
     name="name"
     className="block w-full bg-gray-800 p-2 mb-4 rounded" 
+    value={formData.name}
+    onChange={handleChange}
     placeholder="Name" 
   />
 
   <input
     name="request"
     className="block w-full bg-gray-800 p-2 mb-4 rounded"
+    value={formData.request}
+    onChange={handleChange}
     placeholder="Request"
   />  
 
   <input
     name="amount" 
     className="block w-full bg-gray-800 p-2 mb-4 rounded"
+    value={formData.amount}
+    onChange={handleChange}
     placeholder="Amount"
   />
 
   <button 
     type="submit"
     className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded"
+    onClick={handleSubmit}
   >
     Create User
   </button>
