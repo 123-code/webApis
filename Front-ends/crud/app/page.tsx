@@ -22,15 +22,17 @@ export default function Home() {
     });
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const name = formData.name;
-    const request = formData.request;
-    const amount = formData.amount;
-    console.log("amount",amount);
-    createUser({
-      variables: { name, request, amount}
-    })
+    const {request,amount,name } = formData;
+    try {
+      const result = await createUser({
+        variables: {request,amount,name}
+      });
+      console.log('Mutation Result:', result);
+    } catch (err) {
+      console.error('Mutation Error:', err);
+    }
   }
 
   const {data,loading, error } = useQuery(GET_PEOPLE);
