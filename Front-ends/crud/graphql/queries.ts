@@ -19,4 +19,4 @@ query {
   }`;
 
   
-  export const DELETEUSER = gql `mutation {DeletePerson(id:1)}`;
+  export const DELETEUSER = gql `mutation {DeletePerson(id:1)}`; 
