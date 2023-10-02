@@ -15,8 +15,8 @@ query {
   }
 `;
 export const UPDATE_USER = gql`
-  mutation updatePerson($id: Int!, $request: String!, $amount: Int!, $name: String!) {
-    updatePerson(id: $id, request: $request, amount: $amount, name: $name) 
+  mutation updatePerson($request: String!, $amount: Int!, $name: String!,$id: Int!) {
+    updatePerson( request: $request, amount: $amount, name: $name,id: $id) 
   }
 `;
  

@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import {GET_PEOPLE,CREATE_PERSON,UPDATE_USER,DELETEUSER} from '../graphql/queries';
-
+import UpdateForm from '@/Components /UpdateForm';
 
  
 
@@ -14,6 +14,13 @@ export default function Home() {
     name: '',
     amount: 0,
     request: '' 
+  });
+
+  const [updateformData, setupdateFormData] = useState({
+    name: '',
+    amount: 0,
+    request: '' ,
+    id:0
   });
 
 
@@ -55,23 +62,31 @@ export default function Home() {
   
   const UpdatebuttonClick = async (user) => {
 
-    setFormData({
-      name: user.name, 
-      amount: user.amount,
-      request: user.request
+   setupdateFormData({
+    name: user.name,
+    amount: user.amount,
+    request: user.request, 
+    id: user.id
+  });
+  console.log(updateformData)
+  if (updateformData.name) {
+    await updateUser({
+      variables: {
+        name: updateformData.name,
+        amount: updateformData.amount,
+        request: updateformData.request,
+        id: updateformData.id
+      }
     });
-  
-    if (formData.name) {
-      await updateUser({
-        variables: {
-          name: formData.name,
-          amount: formData.amount,
-          request: formData.request
-        } 
+
+      setupdateFormData({
+        name: '',
+        amount: 0,
+        request: '',
+        id: 0
       });
-      
       // Refetch query to update UI
-      //refetch(); 
+      refetch(); 
     }
   
   };
@@ -79,10 +94,11 @@ export default function Home() {
 
 
 
-  const {data,loading, error } = useQuery(GET_PEOPLE);
+  const {data,loading, error,refetch } = useQuery(GET_PEOPLE);
   const [createUser] = useMutation(CREATE_PERSON);
   const [deleteUser] = useMutation(DELETEUSER);
   const [updateUser] = useMutation(UPDATE_USER);
+  
   //createUser().catch(err => console.log(err))
 
   if (loading) return <p>Loading...</p>;
@@ -124,8 +140,8 @@ export default function Home() {
 <button
   type="button" 
   className="bg-orange-500 hover:bg-blue-600 text-white px-2 py-2 rounded ml-3"
-  onClick={() => UpdatebuttonClick(person.id, person.request, person.amount, person.name)}
->
+  onClick={() => UpdatebuttonClick(person)}>
+
   Update User
 </button>
 </div>
@@ -173,7 +189,7 @@ export default function Home() {
 
 </form>
 </div>
-
+<UpdateForm />
       </div>
     </main>
   )
