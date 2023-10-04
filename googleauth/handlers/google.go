@@ -6,6 +6,9 @@ import (
 	"googleauth/config"
 	"io/ioutil"
 	"net/http"
+	"time"
+
+	"github.com/golang-jwt/jwt"
 	// "io/ioutil"
 	// "context"
 	// "fmt"
@@ -49,5 +52,25 @@ if err != nil{
 	
 	
 }
+redirectURL := "http://localhost:3000/"
+http.Redirect(res,req,redirectURL,http.StatusSeeOther)
 fmt.Fprintln(res,string(userData))
+
+claims := jwt.StandardClaims{
+	Subject: "user123", 
+	ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+  }
+  
+  jwtoken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+  ss, err := jwtoken.SignedString([]byte("secret"))
+  if err != nil {
+    fmt.Println("error",err);
+  } else{
+	fmt.Println("token",ss);
+  }
+
+  //tokenString := createJWT(user)
+  res.Write([]byte(ss))
+  res.Write([]byte(string(userData)))
+
 }

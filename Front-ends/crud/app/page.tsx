@@ -1,13 +1,13 @@
 "use client";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Image from 'next/image'
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import {GET_PEOPLE,CREATE_PERSON,UPDATE_USER,DELETEUSER} from '../graphql/queries';
 import UpdateForm from '@/Components /UpdateForm';
 import RefreshButton from '@/Components /RefreshButton';
- 
-
+ import {FetchToken} from '@/Components /FetchToken';
+import Profile from '@/Components /UserProfile';
 export default function Home() {
 
   const [formData, setFormData] = useState({
@@ -24,9 +24,7 @@ export default function Home() {
   });
 
 
-  const [name,setname] = useState("");
-  const [amount,setamount] = useState(0);
-  const [request,setrequest] = useState("");
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,6 +109,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <h1>TakeOff</h1>
+        <Profile/>
         <RefreshButton refetch={refetch} />
         <div   >
         {data.persons.map(person => (
