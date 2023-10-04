@@ -1,6 +1,6 @@
 module googleauth
 
-go 1.21.1
+go 1.21
 
 require (
 	cloud.google.com/go/compute v1.20.1 // indirect
