@@ -6,9 +6,9 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloWorldResolver } from "./resolvers/HelloWorldResolver";
 import { PersonResolver } from "./resolvers/PersonResolver";
-
+   
 (async () => {
-  const app = express();
+  const app = express();   
   app.use(cors());
   const options = await getConnectionOptions(
     process.env.NODE_ENV || "development"
@@ -29,3 +29,4 @@ import { PersonResolver } from "./resolvers/PersonResolver";
     console.log(`server started at http://localhost:${port}/graphql`);
   });
 })();
+  

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import {GET_PEOPLE,CREATE_PERSON,UPDATE_USER,DELETEUSER} from '../graphql/queries';
 import UpdateForm from '@/Components /UpdateForm';
-
+import RefreshButton from '@/Components /RefreshButton';
  
 
 export default function Home() {
@@ -49,6 +49,7 @@ export default function Home() {
       console.error('Mutation Error:', err);
    
     }
+    refetch(); 
   }
 
 
@@ -58,6 +59,7 @@ export default function Home() {
     deleteUser({
       variables: { id }
     });
+    refetch();
   };
   
   const UpdatebuttonClick = async (user) => {
@@ -109,7 +111,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <h1>TakeOff</h1>
-        
+        <RefreshButton refetch={refetch} />
         <div   >
         {data.persons.map(person => (
 
