@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"googleauth/config"
 	"io/ioutil"
@@ -13,6 +14,12 @@ import (
 	// "context"
 	// "fmt"
 )
+ 
+type GoogleUserInfo struct {
+    ID string `json:"id"`
+    // Add other fields as needed based on the JSON structure.
+}
+
 
 func GoogleLogin(res http.ResponseWriter,req *http.Request){
 	googleConfig := config.SetupConfig()
@@ -52,15 +59,28 @@ if err != nil{
 	
 	
 }
-redirectURL := "http://localhost:3000/"
+
+var userInfo GoogleUserInfo
+err = json.Unmarshal(userData, &userInfo)
+    if err != nil {
+        fmt.Fprintln(res, "could not parse user ID",err)
+        return
+    }
+
+
+// Write JSON response
+res.Header().Set("Content-Type", "application/json")
+fmt.Println("data",userData)
+redirectURL := "http://localhost:3000/feed?userID="+string(userInfo.ID)
 http.Redirect(res,req,redirectURL,http.StatusSeeOther)
-fmt.Fprintln(res,string(userData))
+
+//fmt.Fprintln(res,string(userData))
 
 claims := jwt.StandardClaims{
 	Subject: "user123", 
 	ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
   }
-  
+  res.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
   jwtoken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
   ss, err := jwtoken.SignedString([]byte("secret"))
   if err != nil {

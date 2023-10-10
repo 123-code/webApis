@@ -13,9 +13,9 @@ export default function Profile() {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const res = await fetch('localhost:8080/google/callback')
+            const res = await fetch('http://localhost:8080/google/callback')
             const data = await res.json()
-
+            console.log("datos",data)
             // Parse JWT from first response
             const jwt = await res.text()
 
@@ -36,7 +36,7 @@ export default function Profile() {
                 alt="Picture of the user"
             />
 
-            <h1>{user?.name}</h1>
+            <h1>{user?.name}.</h1>
         </div>
     )
 }
