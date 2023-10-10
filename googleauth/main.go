@@ -5,11 +5,12 @@ import (
 // import and enalble cors
 "github.com/rs/cors"
 "googleauth/handlers"
-
+"googleauth/database"
 "fmt"
 ) 
 
 func main() {
+	DB.DBconnect()
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, 
 		AllowedMethods: []string{"GET", "POST"},

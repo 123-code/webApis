@@ -14,7 +14,7 @@ import (
 func DBconnect(){
 	var err error;
 
-	dsn := "host=mahmud.db.elephantsql.com user=dcdgubry password=gpmuDY2lu01owW7RBHBIh3sq1TDkbBL6 dbname=dcdgubry port=5432 sslmode=disable"
+	dsn := "host=bubble.db.elephantsql.com user=phwhnrge password=gWpUx0ZYKbFDhY9_ry-AMPTTN7pzqt71 dbname=phwhnrge port=5432 sslmode=disable"
 	DBconn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	DBconn.AutoMigrate(&datamodel.User{});

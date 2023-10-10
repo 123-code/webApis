@@ -5,20 +5,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"googleauth/config"
+	//"googleauth/database"
+	//"googleauth/datamodel"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	// "io/ioutil"
-	// "context"
-	// "fmt"
+	"github.com/google/uuid"
 )
  
-type GoogleUserInfo struct {
-    ID string `json:"id"`
-    // Add other fields as needed based on the JSON structure.
-}
 
 
 func GoogleLogin(res http.ResponseWriter,req *http.Request){
@@ -29,6 +26,19 @@ func GoogleLogin(res http.ResponseWriter,req *http.Request){
 }
 
 func GoogleCallback(res http.ResponseWriter,req *http.Request){
+	
+	var GoogleUserInfo struct {
+
+		ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+		Googleid string `json:"id"`
+		Email string `json:"email"`
+		Given_name string `json:"given_name"`
+		Family_name string `json:"family_name"`
+		Picture string `json:"picture"`
+		Locale string `json:"locale"`
+	}
+	
+
 
 state := req.URL.Query()["state"][0]
 if state != "randomstate"{
@@ -60,19 +70,44 @@ if err != nil{
 	
 }
 
-var userInfo GoogleUserInfo
-err = json.Unmarshal(userData, &userInfo)
+
+
+
+
+err = json.Unmarshal(userData, &GoogleUserInfo)
     if err != nil {
         fmt.Fprintln(res, "could not parse user ID",err)
         return
     }
 
+/*
+	newUser := datamodel.User{     
+        ID:  uuid.New(),
+   
+        Googleid:    GoogleUserInfo.Googleid,
+        Email:       GoogleUserInfo.Email,
+        Given_name:  GoogleUserInfo.Given_name,
+        Family_name: GoogleUserInfo.Family_name,
+        Picture:     GoogleUserInfo.Picture,
+        Locale:      GoogleUserInfo.Locale,
+    }
+*/
 
 // Write JSON response
 res.Header().Set("Content-Type", "application/json")
-fmt.Println("data",userData)
-redirectURL := "http://localhost:3000/feed?userID="+string(userInfo.ID)
+fmt.Println("data",string(userData))
+redirectURL := "http://localhost:3000/feed"
+log.Println("User has been saved to the database.")
+
 http.Redirect(res,req,redirectURL,http.StatusSeeOther)
+
+//createuser(newUser)
+/*
+if err := DB.DBconn.Create(newUser).Error; err !=nil{
+	log.Fatalf("Failed to create user: %v", err)
+	return 
+}
+*/
 
 //fmt.Fprintln(res,string(userData))
 

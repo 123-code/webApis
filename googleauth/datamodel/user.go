@@ -8,17 +8,16 @@ import (
 
 type User struct {
 	gorm.Model
-	ID uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	googleid string `json:"googleid"`
-	email string `json "email"`
-	given_name string `json "given_name"`
-	family_name string `json "family_name`
-	picture string `json "picture"`
-	locale string `json "locale"`
+	ID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
+	Googleid string`json:"id"`
+	Email string `json:"email"`
+	Given_name string `json:"Given_name"`
+	Family_name string `json:"Family_name"`
+	Picture string `json:"Picture"`
+	Locale string `json:"Locale"`
+	
 }
 
-
-func (p *User) BeforeCreate(tx *gorm.DB) error{
-	p.ID = uuid.New()
-	return nil
-}
+func (User) TableName() string {
+	return "users"
+  }
