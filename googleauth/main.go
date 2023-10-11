@@ -6,6 +6,7 @@ import (
 "github.com/rs/cors"
 "googleauth/handlers"
 "googleauth/database"
+"googleauth/apiroutes"
 "fmt"
 ) 
 
@@ -19,6 +20,7 @@ func main() {
 fmt.Println("Server is running on port 8080");
 http.HandleFunc("/google/login", handlers.GoogleLogin)
 http.HandleFunc("/google/callback", handlers.GoogleCallback)
+http.HandleFunc("/getuserdata", apiroutes.SendResponse)
 http.ListenAndServe(":8080", c.Handler(http.DefaultServeMux))
 
 }

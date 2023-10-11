@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"googleauth/config"
 	//"googleauth/database"
-	//"googleauth/datamodel"
+	"googleauth/datamodel"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
-
+	"googleauth/apiroutes"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 )
@@ -80,7 +80,7 @@ err = json.Unmarshal(userData, &GoogleUserInfo)
         return
     }
 
-/*
+
 	newUser := datamodel.User{     
         ID:  uuid.New(),
    
@@ -91,25 +91,29 @@ err = json.Unmarshal(userData, &GoogleUserInfo)
         Picture:     GoogleUserInfo.Picture,
         Locale:      GoogleUserInfo.Locale,
     }
-*/
+
 
 // Write JSON response
 res.Header().Set("Content-Type", "application/json")
 fmt.Println("data",string(userData))
+
 redirectURL := "http://localhost:3000/feed"
 log.Println("User has been saved to the database.")
-
 http.Redirect(res,req,redirectURL,http.StatusSeeOther)
 
-//createuser(newUser)
-/*
-if err := DB.DBconn.Create(newUser).Error; err !=nil{
-	log.Fatalf("Failed to create user: %v", err)
-	return 
-}
-*/
+createuser(newUser)
+var response apiroutes.Response
 
-//fmt.Fprintln(res,string(userData))
+error := json.Unmarshal(userData, &response)
+if error != nil {
+ fmt.Println("error")
+}
+//apiroutes.SendResponse(res,response)
+//DB.DBconn.Create(newUser)
+
+
+
+fmt.Fprintln(res,string(userData))
 
 claims := jwt.StandardClaims{
 	Subject: "user123", 

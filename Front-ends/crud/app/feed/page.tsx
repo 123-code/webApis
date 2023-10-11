@@ -11,6 +11,8 @@ import Profile from '@/Components /UserProfile';
 export default function Home() {
   const [userID, setUserID] = useState('');
 const [Name, setName] = useState('');
+const [Picture,setPicture] = useState('')
+const [Familyname,setFamilyName] = useState('')
   useEffect(() => {
     // Extract the userID from the URL query parameters
     const queryParams = new URLSearchParams(window.location.search);
@@ -108,9 +110,12 @@ const [Name, setName] = useState('');
 // + userID.toString
   const fetchUser = async () => {
     console.log("ID",userID.toString)
-    const response = await fetch(`http://localhost:8080/google/callback/${userID.toString}`);
+    const response = await fetch(`http://localhost:8080/getuserdata`);
     const data = await response.json();
-    setName(data.name);
+    setName(data.Given_name);
+    setPicture(data.Picture);
+    setFamilyName(data.Family_name)
+
   }
 
   const {data,loading, error,refetch } = useQuery(GET_PEOPLE);
@@ -128,7 +133,19 @@ const [Name, setName] = useState('');
     <main className="flex min-h-screen flex-col items-center justify-between p-8">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
         <h1>TakeOff</h1>
-       <h2> hola,{Name}</h2>
+       <h2> hola!</h2>
+       <div className="flex">
+       <h2>{Name}</h2>
+       <h2>{Familyname}</h2>
+       </div>
+     
+    <Image
+    className="mb-11"
+    src={Picture}
+    alt={"dibujo"}
+    width={75}
+    height={75}
+    />
         <RefreshButton refetch={refetch} />
         <div className="">
         {data.persons.map(person => (
