@@ -112,6 +112,7 @@ const [Familyname,setFamilyName] = useState('')
     console.log("ID",userID.toString)
     const response = await fetch(`http://localhost:8080/getuserdata`);
     const data = await response.json();
+console.log("DATA:",data)
     setName(data.Given_name);
     setPicture(data.Picture);
     setFamilyName(data.Family_name)
@@ -132,11 +133,13 @@ const [Familyname,setFamilyName] = useState('')
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-8">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
+      <header className="bg-indigo-500 text-white p-4 flex items-center">
         <h1>TakeOff</h1>
        <h2> hola!</h2>
        <div className="flex">
-       <h2>{Name}</h2>
-       <h2>{Familyname}</h2>
+        
+        {data ?  <h2>{Name}{Familyname}</h2>: <h2>no data</h2> }
+       
        </div>
      
     <Image
@@ -147,6 +150,7 @@ const [Familyname,setFamilyName] = useState('')
     height={75}
     />
         <RefreshButton refetch={refetch} />
+    </header>
         <div className="">
         {data.persons.map(person => (
 

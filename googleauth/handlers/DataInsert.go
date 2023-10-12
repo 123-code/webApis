@@ -4,6 +4,7 @@ import (
 	"log"
 	"googleauth/datamodel"
 	"googleauth/database"
+
 )
 
 func createuser(user datamodel.User) (*datamodel.User, error) {
@@ -28,8 +29,8 @@ func createuser(user datamodel.User) (*datamodel.User, error) {
         log.Fatalf("Failed to create user: %v", err)
         return nil, err
     }
-	
-	return &user, nil
 
+	return &user, nil
+	
 
 }

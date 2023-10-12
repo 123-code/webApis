@@ -2,7 +2,7 @@ package apiroutes
 
 import (
 	"encoding/json"
-
+	"github.com/gorilla/sessions"
 	"googleauth/datamodel"
 	"googleauth/database"
 	"net/http"
@@ -19,17 +19,24 @@ type Response struct {
 }
 
 func SendResponse(w http.ResponseWriter, r *http.Request) {
-	userId := r.Context().Value("user_id")
-fmt.Println("user id is",userId)
+	var store = sessions.NewCookieStore([]byte("your-secret-key"))
+	session, _ := store.Get(r, "user-session")
+
+	userId, ok := session.Values["user_id"].(string)
+
+	if !ok {
+        http.Error(w, "User not logged in", http.StatusUnauthorized)
+        return
+    }
 
 
 
-var user datamodel.User
-if err := DB.DBconn.First(&user, userId).Error; err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
-  }
 
+	var user datamodel.User
+    if err := DB.DBconn.Where("Googleid = ?", userId).First(&user).Error; err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
   
 
 

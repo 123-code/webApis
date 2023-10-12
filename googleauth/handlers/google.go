@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"googleauth/config"
-	//"googleauth/database"
+	"github.com/gorilla/sessions"
 	"googleauth/datamodel"
 	"io/ioutil"
 	"log"
@@ -17,11 +17,12 @@ import (
 )
  
 
-
+var store = sessions.NewCookieStore([]byte("your-secret-key"))
 func GoogleLogin(res http.ResponseWriter,req *http.Request){
 	googleConfig := config.SetupConfig()
 	url := googleConfig.AuthCodeURL("randomstate")
 	http.Redirect(res,req,url,http.StatusSeeOther)
+	
 
 }
 
@@ -97,19 +98,29 @@ err = json.Unmarshal(userData, &GoogleUserInfo)
 res.Header().Set("Content-Type", "application/json")
 fmt.Println("data",string(userData))
 
-redirectURL := "http://localhost:3000/feed"
-log.Println("User has been saved to the database.")
-http.Redirect(res,req,redirectURL,http.StatusSeeOther)
-
 created,err := createuser(newUser)
 if err != nil{
 	fmt.Println("error",err)
 }
-fmt.Println("created",created)
+session, _ := store.Get(req, "user-session")
+session.Values["user_id"] = created.Googleid
+session.Save(req, res)
+redirectURL := "http://localhost:3000/feed"
+log.Println("User has been saved to the database.")
+http.Redirect(res,req,redirectURL,http.StatusSeeOther)
 
 
-ctx := context.WithValue(req.Context(),"user_id", string(created.Googleid))
-req = req.WithContext(ctx)
+
+
+createdJSON, err := json.Marshal(created)
+if err != nil {
+	fmt.Println("error marshalling created user:", err)
+	return
+}
+fmt.Println("created", string(createdJSON))
+
+
+
 var response apiroutes.Response
 
 error := json.Unmarshal(userData, &response)
