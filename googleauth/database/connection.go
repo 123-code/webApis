@@ -18,6 +18,7 @@ func DBconnect(){
 	DBconn, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	DBconn.AutoMigrate(&datamodel.User{});
+	
 
 if err != nil{ 
 	log.Fatal("Failded to connect to database")

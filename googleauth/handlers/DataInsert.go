@@ -6,7 +6,7 @@ import (
 	"googleauth/database"
 )
 
-func createuser(user datamodel.User) {
+func createuser(user datamodel.User) (*datamodel.User, error) {
 	// Connect to the database
 	DB.DBconnect()
 	
@@ -26,8 +26,10 @@ func createuser(user datamodel.User) {
 	// Save the user to the database
 	if err := DB.DBconn.Create(&user).Error; err != nil {
         log.Fatalf("Failed to create user: %v", err)
-        return
+        return nil, err
     }
+	
+	return &user, nil
 
-	log.Println("User has been saved to the database.")
+
 }

@@ -2,6 +2,7 @@ package apiroutes
 
 import (
 	"encoding/json"
+
 	"googleauth/datamodel"
 	"googleauth/database"
 	"net/http"
@@ -18,15 +19,22 @@ type Response struct {
 }
 
 func SendResponse(w http.ResponseWriter, r *http.Request) {
+	userId := r.Context().Value("user_id")
+fmt.Println("user id is",userId)
 
-var userdata[] datamodel.User
 
-DB.DBconn.Find(&userdata);
-var response Response
 
-if len(userdata) > 0 {
-	user := userdata[0]
-	response = Response{
+var user datamodel.User
+if err := DB.DBconn.First(&user, userId).Error; err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+  }
+
+  
+
+
+
+	response := Response{
 		Googleid:    user.Googleid,
 		Email:       user.Email,
 		Given_name:  user.Given_name,
@@ -34,17 +42,18 @@ if len(userdata) > 0 {
 		Picture:     user.Picture,
 		Locale:      user.Locale,
 	}
-}
+
 
 
 w.Header().Set("Content-Type", "application/json")
 jsonData, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 
-	fmt.Println(string(jsonData))
-w.Write(jsonData)
+	fmt.Println("sent",string(jsonData))
+    w.Write(jsonData)
   
   }

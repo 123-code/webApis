@@ -101,15 +101,22 @@ redirectURL := "http://localhost:3000/feed"
 log.Println("User has been saved to the database.")
 http.Redirect(res,req,redirectURL,http.StatusSeeOther)
 
-createuser(newUser)
+created,err := createuser(newUser)
+if err != nil{
+	fmt.Println("error",err)
+}
+fmt.Println("created",created)
+
+
+ctx := context.WithValue(req.Context(),"user_id", string(created.Googleid))
+req = req.WithContext(ctx)
 var response apiroutes.Response
 
 error := json.Unmarshal(userData, &response)
 if error != nil {
  fmt.Println("error")
 }
-//apiroutes.SendResponse(res,response)
-//DB.DBconn.Create(newUser)
+
 
 
 
