@@ -16,3 +16,4 @@ postgresql: base de datos en produccion
 
 sqlite: base de datoes en desarrollo. 
 
+en el caso de la imagen de la arquitectura del login, tenemos un flujo de autenticacion oauth2, usando google, permitimos unicamente a los usuarios que tengan una cuenta de google acceder a la aplicacion, una vez se los autentica, podran tener un perfil, y realizar diferentes acciones detro de la app. 
